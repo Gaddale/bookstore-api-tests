@@ -110,15 +110,38 @@ Allure results (`allure-results-raw.zip`) are uploaded as artifacts.
 
 ```bash 
 bookstore-api-tests/
-├── src/test/java/
-│   ├── base/               # Test base config
-│   ├── factories/          # Business logic orchestration
-│   ├── helpers/            # API request helpers
-│   ├── models/             # POJOs (Book, User, Auth)
-│   ├── tests/              # JUnit test classes
-├── config.properties       # Base URL and configuration
-├── pom.xml                 # Maven dependencies
-└── .github/workflows/      # GitHub Actions CI pipeline
+├── .github/
+│   └── workflows/
+│       └── api-tests.yml
+├── src/
+│   ├── main/
+│   │   └── java/
+│   │       └── com/bookapp/model/
+│   │           ├── book/
+│   │           │   └── Book.java
+│   │           ├── common/             
+│   │           │   └── ErrorResponse.java
+│   │           └── user/
+│   │               ├── AuthResponse.java
+│   │               └── User.java
+│   ├── test/
+│   │   ├── java/
+│   │   │   └── com/bookapp/api/
+│   │   │       ├── base/
+│   │   │       │   └── TestBaseSimplified.java
+│   │   │       ├── factories/
+│   │   │       │   └── BookApiFactory.java
+│   │   │       ├── helpers/
+│   │   │       │   └── BookApiServiceHelper.java
+│   │   │       ├── tests/
+│   │   │       │   └── BookApiTests.java
+│   │   │       └── utility/
+│   │   │           ├── ConfigLoader.java
+│   │   │           └── RequestHelper.java
+│   │   └── resources/
+│   │       └── config.properties
+├── pom.xml
+└── README.md
 ```
 
 ## 🧪 Sample Allure Report
