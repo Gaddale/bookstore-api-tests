@@ -1,4 +1,4 @@
-package com.bookapp.tests;
+package com.bookapp.api.base;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;

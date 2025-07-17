@@ -1,5 +1,6 @@
 package com.bookapp.tests;
 
+import com.bookapp.api.base.TestBaseSimplified;
 import com.bookapp.api.factory.BookApiFactory;
 import com.bookapp.api.utility.RequestHelper;
 import com.bookapp.model.book.Book;
