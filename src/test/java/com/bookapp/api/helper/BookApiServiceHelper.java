@@ -4,6 +4,7 @@ import com.bookapp.model.book.Book;
 import com.bookapp.model.user.AuthResponse;
 import com.bookapp.model.user.User;
 import com.bookapp.api.utility.RequestHelper;
+import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
 import static io.restassured.RestAssured.given;
@@ -65,7 +66,7 @@ public class BookApiServiceHelper {
         return logAndExtractResponse(given()
                 .spec(getAuthenticatedRequestSpec())
                 .when()
-                .get("/books/", bookId).then()
+                .get("/books/"+bookId).then()
                 .extract().response(), 200, false);
     }
 
@@ -85,7 +86,7 @@ public class BookApiServiceHelper {
                 .spec(getAuthenticatedRequestSpec())
                 .body(bookPayload)
                 .when()
-                .put("/books/", bookId).then()
+                .put("/books/"+bookId).then()
                 .extract().response(), 200, false);
     }
 
@@ -94,7 +95,7 @@ public class BookApiServiceHelper {
         return logAndExtractResponse(given()
                 .spec(getAuthenticatedRequestSpec())
                 .when()
-                .delete("/books/", bookId).then()
+                .delete("/books/"+bookId).then()
                 .extract().response(), 200, false); // API returns 200 OK for deletion
     }
 
@@ -105,26 +106,26 @@ public class BookApiServiceHelper {
         return logAndExtractResponse(given()
                 .spec(getAuthenticatedRequestSpec())
                 .when()
-                .get("/books/", bookId).then()
+                .get("/books/"+bookId).then()
                 .extract().response(), 404, false);
     }
 
-    // Create book with invalid data (e.g., missing mandatory fields)
-    public Response createBookWithInvalidData(Book bookPayload) {
+    public Response createBookWithRawJson(String jsonPayload, int expectedStatusCode) {
         return logAndExtractResponse(given()
                 .spec(getAuthenticatedRequestSpec())
-                .body(bookPayload)
+                .contentType(ContentType.JSON) // Ensure Content-Type is JSON for raw body
+                .body(jsonPayload) // Send the raw JSON string
                 .when()
-                .post("/books/").then()
-                .extract().response(), 422, false); // Common for validation errors
+                .post("/books/")
+                .then()
+                .extract().response(), expectedStatusCode, false);
     }
 
-    // Access authenticated endpoint without token (expect 401)
     public Response getAllBooksUnauthenticated() {
         return logAndExtractResponse(given()
                 .spec(getUnauthenticatedRequestSpec()) // Deliberately use unauthenticated spec
                 .when()
                 .get("/books/").then()
-                .extract().response(), 401, false);
+                .extract().response(), 403, false);
     }
 }

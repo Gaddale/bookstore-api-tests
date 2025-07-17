@@ -1,4 +1,3 @@
-// src/test/java/com/bookapp/tests/BookApiTests.java
 package com.bookapp.tests;
 
 import com.bookapp.api.factory.BookApiFactory;

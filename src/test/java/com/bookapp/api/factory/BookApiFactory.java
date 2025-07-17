@@ -32,9 +32,10 @@ public class BookApiFactory {
 
     @Step("Sign up a new unique user")
     public User signupUniqueUser() {
+        Integer id = faker.number().numberBetween(1, 1000000);
         String email = faker.internet().emailAddress();
         String password = faker.internet().password(8, 12, true, true, true);
-        User newUser = new User(0, email, password); // ID 0 as per curl snippet
+        User newUser = new User(id, email, password);
 
         Response signupResponse = bookApiServiceHelper.signupUser(newUser);
         assertThat(signupResponse.statusCode())
@@ -94,9 +95,7 @@ public class BookApiFactory {
 
     @Step("Verify Health endpoint accessibility")
     public void verifyHealthEndpointIsAccessible() {
-        bookApiServiceHelper.getHealth(); // This is allowed because it's inside BookApiFactory
-        // No explicit assertion here, as getHealth() in helper already asserts 200.
-        // But you could add more assertions if needed for the 'factory' level.
+        bookApiServiceHelper.getHealth();
     }
 
     @Step("Update a book and verify changes")
@@ -175,28 +174,38 @@ public class BookApiFactory {
     }
 
     // --- Example of Negative Test Orchestration ---
-    @Step("Attempt to create a book with invalid data and verify error")
-    public void attemptCreateBookWithInvalidDataAndVerifyError() {
-        // Example: Book with missing mandatory 'name'
-        // --- CRITICAL FIX HERE: Pass null for the 'id' as the first argument ---
-        Book invalidBook = new Book(
-                null, // Pass null for the 'id' field
-                null, // Name is null (as per your example logic for invalid data)
-                faker.book().author(),
-                2020,
-                "summary"
-        );
-        Response response = bookApiServiceHelper.createBookWithInvalidData(invalidBook);
+//    @Step("Attempt to create a book with invalid data and verify error")
+//    public void attemptCreateBookWithInvalidDataAndVerifyError() {
+//        Book invalidBook = new Book(
+//                null, // Pass null for the 'id' field
+//                null, // Name is null (as per your example logic for invalid data)
+//                faker.book().author(),
+//                2020,
+//                "summary"
+//        );
+//        Response response = bookApiServiceHelper.createBookWithInvalidData(invalidBook);
+//        assertThat(response.statusCode()).isEqualTo(422); // Assuming 422 Unprocessable Entity
+//    }
 
-        assertThat(response.statusCode()).isEqualTo(422); // Assuming 422 Unprocessable Entity
-        // You would parse the ErrorResponse POJO here to check the message
-        // ErrorResponse error = (ErrorResponse) response.as(ErrorResponse.class); // Remember the cast if needed
-        // assertThat(error.getMessage()).contains("Name is required");
+    @Step("Attempt to create a book with invalid data (null ID, null name, invalid year) and verify error")
+    public void attemptCreateBookWithInvalidDataAndVerifyError() {
+        // We'll build a Map and convert it to JSON string to allow 'test' for published_year
+        // Alternatively, manually build the JSON string
+        String invalidJsonPayload = String.format(
+                "{\"id\": null, \"name\": null, \"author\": \"%s\", \"published_year\": test, \"book_summary\": \"%s\"}",
+                faker.book().author(),
+                faker.lorem().sentence()
+        );
+
+        Response response = bookApiServiceHelper.createBookWithRawJson(invalidJsonPayload, 422);
+        assertThat(response.statusCode())
+                .as("Request with invalid published_year should return a validation error")
+                .isEqualTo(422);
     }
 
     @Step("Attempt to access authenticated endpoint without login")
     public void attemptAccessAuthEndpointUnauthenticated() {
-        bookApiServiceHelper.getAllBooksUnauthenticated(); // This directly calls the helper expecting 401
+        bookApiServiceHelper.getAllBooksUnauthenticated();
     }
 
     // --- Cleanup Helper ---

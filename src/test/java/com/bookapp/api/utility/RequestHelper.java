@@ -5,23 +5,17 @@ import io.restassured.filter.log.LogDetail; // For more granular logging
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.response.Response; // Not always needed here, but kept for consistency
+import lombok.Getter;
+import lombok.Setter;
 
 public class RequestHelper {
 
-    // Base URI of your Book Application API
-    // In a real framework, this would come from an environment config (like a 'secrets' file)
-    public static final String BASE_URI = "http://localhost:8000";
+    public static final String BASE_URI = ConfigLoader.getProperty("base.url");
 
     // --- Authentication Token Management ---
+    @Getter
+    @Setter
     private static String accessToken; // Stores the bearer token
-
-    public static void setAccessToken(String token) {
-        accessToken = token;
-    }
-
-    public static String getAccessToken() {
-        return accessToken;
-    }
 
     // --- Request Specification Builders ---
 
