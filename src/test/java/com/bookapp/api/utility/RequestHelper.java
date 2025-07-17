@@ -12,24 +12,19 @@ public class RequestHelper {
 
     public static final String BASE_URI = ConfigLoader.getProperty("base.url");
 
-    // --- Authentication Token Management ---
     @Getter
     @Setter
-    private static String accessToken; // Stores the bearer token
+    private static String accessToken;
 
-    // --- Request Specification Builders ---
-
-    // Prepares common specs for unauthenticated endpoints (signup, login, health)
     public static RequestSpecification getUnauthenticatedRequestSpec() {
         return new RequestSpecBuilder()
                 .setBaseUri(BASE_URI)
-                .setContentType(ContentType.JSON) // Request body content type
-                .setAccept(ContentType.JSON)     // Preferred response content type
-                .log(LogDetail.ALL) // Log all request details for debugging
+                .setContentType(ContentType.JSON)
+                .setAccept(ContentType.JSON)
+                .log(LogDetail.ALL)
                 .build();
     }
 
-    // Prepares common specs for authenticated endpoints (books)
     public static RequestSpecification getAuthenticatedRequestSpec() {
         if (accessToken == null || accessToken.isEmpty()) {
             throw new IllegalStateException("Access Token is not set. Please log in first.");
@@ -38,25 +33,21 @@ public class RequestHelper {
                 .setBaseUri(BASE_URI)
                 .setContentType(ContentType.JSON)
                 .setAccept(ContentType.JSON)
-                .addHeader("Authorization", "Bearer " + accessToken) // Add the bearer token
-                .log(LogDetail.ALL) // Log all request details
+                .addHeader("Authorization", "Bearer " + accessToken)
+                .log(LogDetail.ALL)
                 .build();
     }
 
-    // --- Response Logging and Extraction Helper (Similar to your updateCookies logic) ---
-    // This helper method encapsulates logging and returning the response.
     public static Response logAndExtractResponse(Response response, int expectedStatusCode, boolean logAll) {
         if (logAll) {
-            response.then().log().all(); // Log both request and response for this call
+            response.then().log().all();
         } else {
-            response.then().log().ifError(); // Log response only if an error status code (4xx, 5xx)
+            response.then().log().ifError();
         }
-        // Assert the status code directly here
         response.then().statusCode(expectedStatusCode);
         return response;
     }
 
-    // Overloaded method for cases where multiple status codes are acceptable (e.g., 202 or 409)
     public static Response logAndExtractResponse(Response response, org.hamcrest.Matcher<Integer> statusCodeMatcher, boolean logAll) {
         if (logAll) {
             response.then().log().all();

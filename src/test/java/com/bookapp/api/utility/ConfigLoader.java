@@ -6,7 +6,7 @@ import java.util.Properties;
 
 public class ConfigLoader {
 
-    private static Properties properties; // Use java.util.Properties
+    private static Properties properties;
     private static final String CONFIG_FILE_NAME = "config.properties";
 
     static {

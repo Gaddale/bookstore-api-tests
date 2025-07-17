@@ -6,10 +6,10 @@ import lombok.AllArgsConstructor; // Import this
 import lombok.Data;              // Import this
 import lombok.NoArgsConstructor;   // Import this
 
-@Data // Generates getters, setters, equals, hashCode, toString
-@NoArgsConstructor // Generates a public no-argument constructor (essential for Jackson deserialization)
-@AllArgsConstructor // Generates a constructor with ALL fields (id, name, author, publishedYear, bookSummary)
-@JsonInclude(JsonInclude.Include.NON_NULL) // Only include non-null fields when serializing to JSON
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Book {
 
     @JsonProperty("id")

@@ -35,13 +35,12 @@ public class BookApiServiceHelper {
 
     // User Login and Token Retrieval
     public AuthResponse loginUser(User userPayload) {
-        // Step 1: Execute the request and get the raw Response object
         Response rawResponse = given()
                 .spec(getUnauthenticatedRequestSpec())
                 .body(userPayload)
                 .when()
                 .post("/login")
-                .then() // Ensure .then() is present for proper chain continuation before extraction
+                .then()
                 .extract().response();
 
         Response response = logAndExtractResponse(rawResponse, 200, true);
@@ -77,7 +76,7 @@ public class BookApiServiceHelper {
                 .body(bookPayload)
                 .when()
                 .post("/books/").then()
-                .extract().response(), 200, false); // API returns 200 OK for creation
+                .extract().response(), 200, false);
     }
 
     // PUT an existing book
@@ -96,7 +95,7 @@ public class BookApiServiceHelper {
                 .spec(getAuthenticatedRequestSpec())
                 .when()
                 .delete("/books/"+bookId).then()
-                .extract().response(), 200, false); // API returns 200 OK for deletion
+                .extract().response(), 200, false);
     }
 
     // --- Negative Test Helpers ---
@@ -113,8 +112,8 @@ public class BookApiServiceHelper {
     public Response createBookWithRawJson(String jsonPayload, int expectedStatusCode) {
         return logAndExtractResponse(given()
                 .spec(getAuthenticatedRequestSpec())
-                .contentType(ContentType.JSON) // Ensure Content-Type is JSON for raw body
-                .body(jsonPayload) // Send the raw JSON string
+                .contentType(ContentType.JSON)
+                .body(jsonPayload)
                 .when()
                 .post("/books/")
                 .then()
@@ -123,7 +122,7 @@ public class BookApiServiceHelper {
 
     public Response getAllBooksUnauthenticated() {
         return logAndExtractResponse(given()
-                .spec(getUnauthenticatedRequestSpec()) // Deliberately use unauthenticated spec
+                .spec(getUnauthenticatedRequestSpec())
                 .when()
                 .get("/books/").then()
                 .extract().response(), 403, false);
