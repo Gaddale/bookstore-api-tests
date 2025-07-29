@@ -47,7 +47,7 @@ Ensure the following tools are installed before running the tests:
 - **Java JDK 17+** – [Adoptium Temurin recommended](https://adoptium.net/)
 - **Maven 3.6+**
 - **Allure CLI** – [Installation Guide](https://allurereport.org/docs/gettingstarted-installation/)
-- **Running Book Application API** – Default assumed URL: `http://localhost:8000`
+- **Running Book Application API** – Default assumed URL: `http://localhost:8000` (Follow the steps from bookstore.zip)
 
 ---
 
@@ -59,12 +59,16 @@ Ensure the following tools are installed before running the tests:
   git clone https://github.com/Gaddale/bookstore-api-tests
   cd bookstore-api-tests
 ```
+
 ### 2. Configure config.properties
+
 Update the base URL if your API runs on a different host:
+
 ```bash
   # src/test/resources/config.properties
 base.url=http://localhost:8000
 ```
+
 ### 3. Import into IntelliJ IDEA
 
 - Open the project using `pom.xml`.
@@ -76,21 +80,27 @@ base.url=http://localhost:8000
   `File > Invalidate Caches / Restart > Invalidate and Restart`
 
 ## ▶️ Running Tests
+
 Run All Tests
+
 ```bash
   mvn clean install
   mvn test
 ```
+
 Allure results will be generated at: `target/allure-results`
 
 ## 🏷️ Running by Tags (Groups)
+
 ```bash
   mvn test -Dgroups=smoke     # Smoke tests only
   mvn test -Dgroups=sanity    # Sanity tests only
 ```
 
 ## 🔁 CI/CD – GitHub Actions
+
 Automated tests are run using GitHub Actions on:
+
 - Pushes to `main` or `develop`
 - Pull Request events
 
@@ -100,15 +110,17 @@ CI Artifacts:
 Allure results (`allure-results-raw.zip`) are uploaded as artifacts.
 
 **Viewing CI Results:**
+
 1. Go to your repo → Actions tab.
 2. Select a workflow run → Download `allure-results-raw.zip`.
 3. Unzip and run locally:
    ```bash
    allure serve <unzipped-folder>
-    ```
+   ```
+
 ## 📁 Project Structure
 
-```bash 
+```bash
 bookstore-api-tests/
 ├── .github/
 │   └── workflows/
@@ -119,7 +131,7 @@ bookstore-api-tests/
 │   │       └── com/bookapp/model/
 │   │           ├── book/
 │   │           │   └── Book.java
-│   │           ├── common/             
+│   │           ├── common/
 │   │           │   └── ErrorResponse.java
 │   │           └── user/
 │   │               ├── AuthResponse.java
@@ -145,6 +157,6 @@ bookstore-api-tests/
 ```
 
 ## 🧪 Sample Allure Report
+
 ![Allure Report](./screenshots/allure-report-1.png)
 ![Allure Report](./screenshots/allure-report-2.png)
-
